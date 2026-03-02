@@ -31,3 +31,4 @@ def commit_changes(message):
 
     run_git_command(["git", "commit", "-m", message])
     print("✅ Commit successful.")
+    #testing the code for git commit
