@@ -45,3 +45,4 @@ Changes:
     result = response.json()
 
     return result["candidates"][0]["content"]["parts"][0]["text"].strip().replace("\n", " ")
+    #testing the code for git commit
