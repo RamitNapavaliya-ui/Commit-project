@@ -13,10 +13,10 @@ def generate_commit_message(diff_text):
     client = genai.Client(api_key=api_key)
 
     prompt = f"""
-Generate a short, professional Git commit message.
+Generate a short and professional Git commit message.
 Use imperative tone.
 Keep it under 15 words.
-Do not explain anything.
+Do not add explanations.
 
 Changes:
 {diff_text}
