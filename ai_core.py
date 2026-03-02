@@ -11,7 +11,7 @@ if not API_KEY:
 
 
 def generate_commit_message(diff_text):
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={API_KEY}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={API_KEY}"
 
     prompt = f"""
 Generate a short professional Git commit message.
@@ -45,4 +45,3 @@ Changes:
     result = response.json()
 
     return result["candidates"][0]["content"]["parts"][0]["text"].strip().replace("\n", " ")
-    #testing the code for git commit
