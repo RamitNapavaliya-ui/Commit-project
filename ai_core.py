@@ -1,21 +1,17 @@
-from google import genai
-from google.genai import types
 import os
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
 
+API_KEY = os.getenv("GEMINI_API_KEY")
+
+if not API_KEY:
+    raise ValueError("GEMINI_API_KEY not found in .env")
+
+
 def generate_commit_message(diff_text):
-    api_key = os.getenv("GEMINI_API_KEY")
-
-    if not api_key:
-        raise ValueError("GEMINI_API_KEY not found in .env")
-
-    # IMPORTANT: specify API version for free keys
-    client = genai.Client(
-        api_key=api_key,
-        http_options=types.HttpOptions(api_version="v1")
-    )
+    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key={API_KEY}"
 
     prompt = f"""
 Generate a short professional Git commit message.
@@ -27,9 +23,25 @@ Changes:
 {diff_text}
 """
 
-    response = client.models.generate_content(
-        model="gemini-1.5-flash",
-        contents=prompt,
-    )
+    headers = {
+        "Content-Type": "application/json"
+    }
 
-    return response.text.strip().replace("\n", " ")
+    data = {
+        "contents": [
+            {
+                "parts": [
+                    {"text": prompt}
+                ]
+            }
+        ]
+    }
+
+    response = requests.post(url, headers=headers, json=data)
+
+    if response.status_code != 200:
+        raise Exception(f"API Error: {response.text}")
+
+    result = response.json()
+
+    return result["candidates"][0]["content"]["parts"][0]["text"].strip().replace("\n", " ")
